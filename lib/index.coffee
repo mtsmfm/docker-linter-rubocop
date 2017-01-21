@@ -1,6 +1,8 @@
 path = require 'path'
 helpers = require 'atom-linter'
 escapeHtml = require 'escape-html'
+co = require 'co'
+dockerHelper = require './docker-helper'
 
 COMMAND_CONFIG_KEY = 'linter-rubocop.command'
 DISABLE_CONFIG_KEY = 'linter-rubocop.disableWhenNoConfigFile'
@@ -43,16 +45,21 @@ formatMessage = ({message, cop_name, url}) ->
 
 lint = (editor) ->
   convertOldConfig()
-  command = atom.config.get(COMMAND_CONFIG_KEY).split(/\s+/).filter((i) -> i)
-    .concat(DEFAULT_ARGS, filePath = editor.getPath())
+
+  filePath = editor.getPath()
+  rootPath = path.dirname(helpers.find(filePath, 'docker-compose.yml'))
+
   if atom.config.get(DISABLE_CONFIG_KEY) is true
     config = helpers.find(filePath, '.rubocop.yml')
     return [] if config is null
-  cwd = path.dirname helpers.find filePath, '.'
-  stdin = editor.getText()
-  stream = 'both'
-  helpers.exec(command[0], command[1..], {cwd, stdin, stream}).then (result) ->
-    {stdout, stderr} = result
+
+  co ->
+    rubocopContainer = yield dockerHelper.findExecutableContainer(['bundle', 'exec', 'rubocop', '-v'], rootPath)
+    {stdout, stderr} = yield dockerHelper.dockerExec(
+      rubocopContainer,
+      ['bundle', 'exec', 'rubocop'].concat(DEFAULT_ARGS, path.relative(rootPath, filePath)),
+      {stream: 'both', stdin: editor.getText()}
+    )
     parsed = try JSON.parse(stdout)
     throw new Error stderr or stdout unless typeof parsed is 'object'
     (parsed.files?[0]?.offenses or []).map (offense) ->
