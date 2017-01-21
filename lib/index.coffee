@@ -4,10 +4,6 @@ escapeHtml = require 'escape-html'
 co = require 'co'
 dockerHelper = require './docker-helper'
 
-COMMAND_CONFIG_KEY = 'linter-rubocop.command'
-DISABLE_CONFIG_KEY = 'linter-rubocop.disableWhenNoConfigFile'
-OLD_EXEC_PATH_CONFIG_KEY = 'linter-rubocop.executablePath'
-OLD_ARGS_CONFIG_KEY = 'linter-rubocop.additionalArguments'
 DEFAULT_LOCATION = {line: 1, column: 1, length: 0}
 DEFAULT_ARGS = [
   '--cache', 'false',
@@ -18,14 +14,6 @@ DEFAULT_ARGS = [
 ]
 DEFAULT_MESSAGE = 'Unknown Error'
 WARNINGS = new Set(['refactor', 'convention', 'warning'])
-
-convertOldConfig = ->
-  execPath = atom.config.get OLD_EXEC_PATH_CONFIG_KEY
-  args = atom.config.get OLD_ARGS_CONFIG_KEY
-  return unless execPath or args
-  atom.config.set COMMAND_CONFIG_KEY, "#{execPath or ''} #{args or ''}".trim()
-  atom.config.set OLD_EXEC_PATH_CONFIG_KEY, undefined
-  atom.config.set OLD_ARGS_CONFIG_KEY, undefined
 
 extractUrl = (message) ->
   [message, url] = message.split /\ \((.*)\)/, 2
@@ -44,14 +32,8 @@ formatMessage = ({message, cop_name, url}) ->
   formatted_message + formatted_cop_name
 
 lint = (editor) ->
-  convertOldConfig()
-
   filePath = editor.getPath()
   rootPath = path.dirname(helpers.find(filePath, 'docker-compose.yml'))
-
-  if atom.config.get(DISABLE_CONFIG_KEY) is true
-    config = helpers.find(filePath, '.rubocop.yml')
-    return [] if config is null
 
   co ->
     rubocopContainer = yield dockerHelper.findExecutableContainer(['bundle', 'exec', 'rubocop', '-v'], rootPath)
@@ -84,24 +66,4 @@ linter =
   lint: lint
 
 module.exports =
-  config:
-    command:
-      type: 'string'
-      title: 'Command'
-      default: 'rubocop'
-      description: '
-        This is the absolute path to your `rubocop` command. You may need to run
-        `which rubocop` or `rbenv which rubocop` to find this. Examples:
-        `/usr/local/bin/rubocop` or `/usr/local/bin/bundle exec rubocop --config
-        /my/rubocop.yml`.
-      '
-    disableWhenNoConfigFile:
-      type: 'boolean'
-      title: 'Disable when no .rubocop.yml config file is found'
-      default: false
-      description: '
-        Only run linter if a RuboCop config file is found somewhere in the path
-        for the current file.
-      '
-
   provideLinter: -> linter
