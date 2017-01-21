@@ -1,0 +1,16 @@
+version: '2'
+services:
+  ruby:
+    image: ruby
+    command: 'sh -c "trap : TERM INT; sleep infinity & wait"'
+    working_dir: /app
+    environment:
+      BUNDLE_JOB: 4
+      BUNDLE_PATH: /tmp/vendor/bundle
+    volumes:
+      - .:/app
+      - bundle:/tmp/vendor/bundle
+      - home:/home/app
+volumes:
+  home:
+  bundle:
