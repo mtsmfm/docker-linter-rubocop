@@ -4,7 +4,7 @@ This linter plugin for [Linter](https://github.com/AtomLinter/Linter) provides
 an interface to [rubocop](https://github.com/bbatsov/rubocop) on docker. It will be used
 with files that have the “Ruby” syntax.
 
-You must run a container installed `rubocop` via `dodcker-compose`
+You must run a container installed `rubocop` via `docker-compose`
 because linter-docker-rubocop use `docker exec` to run `rubocop`.
 
 ## Installation
