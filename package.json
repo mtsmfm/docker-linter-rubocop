@@ -1,9 +1,9 @@
 {
-  "name": "linter-rubocop",
+  "name": "linter-docker-rubocop",
   "main": "./lib/index.coffee",
-  "version": "0.5.2",
-  "description": "Lint Ruby on the fly, using rubocop",
-  "repository": "https://github.com/AtomLinter/linter-rubocop",
+  "version": "0.1.0",
+  "description": "Lint Ruby on the fly, using rubocop on docker",
+  "repository": "https://github.com/mtsmfm/linter-docker-rubocop",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"

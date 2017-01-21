@@ -1,77 +1,52 @@
-# linter-rubocop
-
-[![Gitter](https://img.shields.io/badge/gitter-join%20chat-1dce73.svg?style=flat)](https://gitter.im/AtomLinter/Linter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/AtomLinter/linter-rubocop.svg?branch=master)](https://travis-ci.org/AtomLinter/linter-rubocop)
-[![Plugin installs!](https://img.shields.io/apm/dm/linter-rubocop.svg)](https://atom.io/packages/linter-rubocop)
-[![Package version!](https://img.shields.io/apm/v/linter-rubocop.svg?style=flat)](https://atom.io/packages/linter-rubocop)
-[![Dependencies!](https://david-dm.org/AtomLinter/Linter.svg)](https://david-dm.org/AtomLinter/linter-rubocop)
+# linter-docker-rubocop
 
 This linter plugin for [Linter](https://github.com/AtomLinter/Linter) provides
-an interface to [rubocop](https://github.com/bbatsov/rubocop). It will be used
+an interface to [rubocop](https://github.com/bbatsov/rubocop) on docker. It will be used
 with files that have the “Ruby” syntax.
+
+You must run a container installed `rubocop` via `dodcker-compose`
+because linter-docker-rubocop use `docker exec` to run `rubocop`.
 
 ## Installation
 
-Linter package must be installed in order to use this plugin. If Linter is not
-installed, please follow the instructions [here](https://github.com/AtomLinter/Linter).
+Linter package must be installed on your docker container in order to use this plugin. If Linter is not
+installed, please follow the instruction.
+
+### `docker-compose` installation
+
+Follow https://docs.docker.com/engine/installation/.
 
 ### `rubocop` installation
 
-Before using this plugin, you must ensure that `rubocop`, version 0.37 or
-greater, is installed on your system. To install `rubocop`, do the following:
+Before using this plugin, you must ensure that `rubocop` on your docker container.
 
-1.  Install [ruby](https://www.ruby-lang.org/).
-
-2.  Install [rubocop](https://github.com/bbatsov/rubocop) by typing the
-    following in a terminal:
-
-    ```shell
-    gem install rubocop
-    ```
-
-Now you can proceed to install the linter-rubocop plugin.
+```
+$ cd /path/to/your/project
+$ touch docker-compose.yml
+$ # edit your docker-compose.yml to run ruby
+$ docker-compose run ruby bundle init
+$ # add `gem 'rubocop'` to your Gemfile
+$ docker-compose run ruby bundle init
+$ docker-compose run ruby 'sh -c "trap : TERM INT; sleep infinity & wait"' # run your container forever because this package will use `docker exec` to run `rubocop`
+```
 
 ### Plugin installation
 
 ```shell
-apm install linter-rubocop
+apm install linter-docker-rubocop
 ```
 
-## Settings
+## TODO
 
-You can configure linter-rubocop by editing `~/.atom/config.cson`
-(choose Open Your Config in Atom menu):
-
-### executablePath
-
-```cson
-'linter-rubocop':
-  'executablePath': null # rubocop path.
-```
-
-Run `which rubocop` to find the path, if you using rbenv run
-`rbenv which rubocop`
-
-**Note**: This plugin finds the nearest `.rubocop.yml` file and uses the
-`--config` command line argument to use that file, so you may not use the
-`--config` argument in the linter settings.
-
-### Using RVM
-
-If you're using RVM and receiving errors in Atom that indicate Rubocop can't be
-found, you may need to change `/bin` to `/wrappers` in the path that gets
-returned from `which rubocop` before using it as your `executablePath` setting.
-For example, change:
-
-```text
-/Users/JohnDoe/.rvm/gems/ruby-2.2.4@global/bin/rubocop
-```
-
-To:
-
-```text
-/Users/JohnDoe/.rvm/gems/ruby-2.2.4@global/wrappers/rubocop
-```
+- Extract docker-helper.coffee as npm
+- Cache container name
+- Fallback to `docker run` if there are no running container
+- Better error messages
+  - docker not found
+  - docker-compose not found
+  - docker-compose.yml not found
+  - rubocop not found
+  - Running container not found
 
 ## Contributing
 
@@ -91,10 +66,6 @@ Please note that modifications should follow these coding guidelines:
 
 Thank you for helping out!
 
-## Donation
+## Special Thanks
 
-[![Share the love!](https://s3-eu-west-1.amazonaws.com/atom-linter/we-need-your-help.png?style=flat)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KXUYS4ARNHCN8 "Share the love")
-
-[![Gratipay donate button](https://img.shields.io/gratipay/hd-deman.svg?style=flat)](https://www.gratipay.com/hd-deman/ "Donate weekly to this project using Gratipay")
-[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg?style=flat)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KXUYS4ARNHCN8 "Donate once-off to this project using Paypal")
-[![BitCoin donate button](https://img.shields.io/badge/bitcoin-donate-yellow.svg?style=flat)](https://www.coinbase.com/checkouts/2945dab392cb1cefbb7097e4cd17a603 "Donate once-off to this project using BitCoin")
+This package is started as fork off https://github.com/AtomLinter/linter-rubocop.
