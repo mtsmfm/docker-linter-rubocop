@@ -38,7 +38,6 @@ apm install docker-linter-rubocop
 
 ## TODO
 
-- Extract docker-helper.coffee as npm
 - Cache container name
 - Fallback to `docker run` if there are no running container
 - Better error messages

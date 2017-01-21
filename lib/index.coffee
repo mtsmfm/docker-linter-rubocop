@@ -2,7 +2,7 @@ path = require 'path'
 helpers = require 'atom-linter'
 escapeHtml = require 'escape-html'
 co = require 'co'
-dockerHelper = require './docker-helper'
+dockerHelper = require 'atom-docker-linter'
 
 DEFAULT_LOCATION = {line: 1, column: 1, length: 0}
 DEFAULT_ARGS = [

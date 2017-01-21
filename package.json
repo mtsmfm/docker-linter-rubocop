@@ -1,7 +1,7 @@
 {
   "name": "docker-linter-rubocop",
   "main": "./lib/index.coffee",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "Lint Ruby on the fly, using rubocop on docker",
   "repository": "https://github.com/mtsmfm/docker-linter-rubocop",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "escape-html": "^1.0.3"
   },
   "devDependencies": {
+    "atom-docker-linter": "^0.1.1",
     "coffeelint": "^1.15.0",
     "eslint": "^3.9.1",
     "eslint-config-airbnb-base": "^10.0.1",
