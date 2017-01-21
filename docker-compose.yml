@@ -11,6 +11,13 @@ services:
       - .:/app
       - bundle:/tmp/vendor/bundle
       - home:/home/app
+  node:
+    image: node
+    user: node
+    command: 'sh -c "trap : TERM INT; sleep infinity & wait"'
+    working_dir: /app
+    volumes:
+      - .:/app
 volumes:
   home:
   bundle:
