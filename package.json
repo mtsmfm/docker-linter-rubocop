@@ -18,12 +18,12 @@
     "test": "apm test"
   },
   "dependencies": {
+    "atom-docker-linter": "^0.1.1",
     "atom-linter": "~8.0.0",
     "co": "^4.6.0",
     "escape-html": "^1.0.3"
   },
   "devDependencies": {
-    "atom-docker-linter": "^0.1.1",
     "coffeelint": "^1.15.0",
     "eslint": "^3.9.1",
     "eslint-config-airbnb-base": "^10.0.1",
