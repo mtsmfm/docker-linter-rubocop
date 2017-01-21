@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "atom-linter": "~8.0.0",
+    "co": "^4.6.0",
     "escape-html": "^1.0.3"
   },
   "devDependencies": {
